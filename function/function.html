@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function专题</title>
+    <script>
+        //function
+        function 函数名(参数列表){
+            //函数功能代码
+        }
+
+        //1.function1
+        function fn(){
+            console.log(111);
+        };
+        fn();//函数定义，这样子的函数可以先定义后调用
+
+        //2.function2
+        var fn= function(){
+            console.log(222);
+        };
+        fn();//函数表达式，这样子的函数无法先调用，必须写在后面
+
+        //JavaScript中代码运行分为两个阶段:
+        //1.预解析：js文件执行的时候会从头到尾扫描一遍，会将所有的变量定义和函数定义(整个函数)都提升到最前面，变量的赋值不提前
+        //2.执行：按照代码的逻辑从上到下执行，也有另外(setInterval,setTimeout,ajax回调函数,需要触发的事件)
+
+        var cb = function(){
+            console.log(123);
+        }
+        function fn2(callback){
+            callback();
+        }
+        fn2(cb);
+        //结论：函数的参数可以是一个函数，这个函数可以直接调用
+
+
+
+
+        function fn4(){
+            var n=1;
+            var fn = function(){
+                //console.log(789);
+                n++;
+                console.log(n);
+            }
+            return fn;
+        }
+        var fn5 = fn4();
+        fn5();
+        fn5();
+        fn5();
+        //结论：函数可以作为返回值使用；函数的嵌套形成闭包
+
+        var data = [];
+        for(var i= 0;i<3;i++){
+            data[i] = function(){
+                console.log(i);
+            }
+        }
+        data[0]();
+        data[1]();
+        data[2]();
+        //结论:3个3，在JS中没有块作用域，在哪里定义的变量都可以使用，全局可见。数组的每个值都是1个function，for循环代码执行完后i是3
+        //作用域:私有空间，分为全局作用域，函数作用域，异常处理作用域(`try{}catch(e){}`)
+
+        var i=3;
+        var data = [];
+        for(var i= 0;i<3;i++){
+            data[i] = (function(k){//K由外面的i传入，形成独立作用域
+                return function (){
+                    console.log(k);
+                };
+            })(i)
+        }
+        data[0]();
+        data[1]();
+        data[2]();
+        //输出0,1,2，就是闭包，里面函数所处的环境是在外面的函数里面。
+
+
+
+        //function是一个构造函数，可以制造出果汁
+        function juiceMachine(friut){
+            this.friut = friut;
+            this.produceJuice = function(){
+                console.log(this.friut + "果汁");
+            }
+        }
+        //function本身就是一个函数(对象)，他有自己的属性和方法
+        juiceMachine.brand = "九阳";
+        juiceMachine.open = function(){
+            console.log('open');
+        }
+
+        var apple = new juiceMachine("苹果");
+        apple.produceJuice();
+        var brand = apple.brand;//在这边无法访问，因为brand属于 juiceMachine
+
+        var orange =new juiceMachine("橙");
+        orange.produceJuice();
+
+        //结论：function有双重身份，一是对象，而是构造函数
+    </script>
+</head>
+<body>
+
+</body>
+</html>
